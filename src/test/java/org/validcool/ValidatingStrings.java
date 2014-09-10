@@ -10,7 +10,7 @@ public class ValidatingStrings {
 
     @BeforeClass
     public static void setupValidators() {
-        ValidatorsConfig.printFailOutput = true;
+        validcoolConfig.startLogging();
     }
 
     @Test(expected = ValidationException.class)

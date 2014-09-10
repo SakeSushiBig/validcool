@@ -69,25 +69,7 @@ public class Validator<E> {
                     }
                 },
                 String.format("\"%s\" or \"%s\"", this.getDescription(), other.getDescription()),
-                (E value) -> !this.isValid() ? this.getErrorMessage() : other.getErrorMessage()
-        );
-    }
-
-    public Validator<E> equvivalent(Validator<E> other) {
-        return new Validator<>(
-                (E value) -> {
-                    this.apply(value);
-                    other.apply(value);
-                    return this.isValid() == other.isValid();
-                },
-                String.format("either %s and %s or neither", this.getDescription(), other.getDescription()),
-                (E value) -> {
-                    StringBuilder errorMessage = new StringBuilder();
-                    errorMessage.append(this.isValid() ? this.getDescription() : this.getErrorMessage());
-                    errorMessage.append(" but ");
-                    errorMessage.append(other.isValid() ? other.getDescription() : other.getErrorMessage());
-                    return errorMessage.toString();
-                }
+                (E value) -> String.format("\"%s\" NOR \"%s\"", this.getErrorMessage(), other.getErrorMessage())
         );
     }
 

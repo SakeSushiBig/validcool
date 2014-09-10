@@ -8,25 +8,23 @@ import java.util.regex.Pattern;
 
 public class Validations {
 
-    public static final class ValidatorsConfig {
-        public static boolean printFailOutput = false;
-        public static Consumer<String> failOutput = System.err::println;
-    }
+    public static final ValidcoolConfiguration validcoolConfig = new ValidcoolConfiguration();
 
     public static <E> void validate(E actual, Validator<E> validator) {
         validator.apply(actual);
         if(!validator.isValid()) {
             String errorMessage = validator.getErrorMessage();
-            if(ValidatorsConfig.printFailOutput) {
-                ValidatorsConfig.failOutput.accept(errorMessage);
-            }
-            throw new ValidationException(errorMessage);
+            validcoolConfig.handle(errorMessage);
         }
     }
 
     public static <E> boolean doCheck(E actual, Validator<E> validator) {
         validator.apply(actual);
-        return validator.isValid();
+        boolean isValid = validator.isValid();
+        if(!isValid) {
+            validcoolConfig.logIfEnabled(validator.getErrorMessage());
+        }
+        return isValid;
     }
 
     public static <E, S> Validator<E> with(Function<E, S> selector, Validator<S> validator) {

@@ -1,5 +1,6 @@
 package org.validcool;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.awt.*;
@@ -9,6 +10,11 @@ import static java.util.Arrays.asList;
 import static org.validcool.Validations.*;
 
 public class BasicValidating {
+
+    @BeforeClass
+    public static void setupLogging() {
+        validcoolConfig.startLogging();
+    }
 
     @Test
     public void greaterThan_win() {

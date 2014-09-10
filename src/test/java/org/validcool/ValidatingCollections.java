@@ -17,7 +17,7 @@ public class ValidatingCollections {
 
     @BeforeClass
     public static void setupValidators() {
-        Validations.ValidatorsConfig.printFailOutput = true;
+        validcoolConfig.startLogging();
     }
 
     @Test
