@@ -9,13 +9,13 @@ public class Checking {
 
     @Test
     public void check_win() {
-        boolean checkTrue = doCheck(null, nullValue());
+        boolean checkTrue = check(null, nullValue());
         assertThat("check should return true", checkTrue);
     }
 
     @Test
     public void check_fail() {
-        boolean checkFalse = !doCheck(null, not(nullValue()));
+        boolean checkFalse = !check(null, not(nullValue()));
         assertThat("check should return false", checkFalse);
     }
 

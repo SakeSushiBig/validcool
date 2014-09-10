@@ -3,6 +3,10 @@ package org.validcool;
 import java.util.regex.Pattern;
 
 public class StringValidations {
+
+    /**
+     * Matches actual string against a regex pattern using @see java.util.regex.Pattern
+     */
     public static <E extends CharSequence> Validator<E> matches(String pattern) {
         return new Validator<>(
                 (E value) -> Pattern.matches(pattern, value),
@@ -11,6 +15,9 @@ public class StringValidations {
         );
     }
 
+    /**
+     * Fails when actual is no substring of string.
+     */
     public static <E extends String> Validator<E> isSubstringOf(String string) {
         return new Validator<>(
                 string::contains,
@@ -19,6 +26,9 @@ public class StringValidations {
         );
     }
 
+    /**
+     * Fails when actual does not contain other.
+     */
     public static <E extends String> Validator<E> contains(String other) {
         return new Validator<>(
                 (E value) -> value.contains(other),
@@ -67,6 +77,9 @@ public class StringValidations {
         );
     }
 
+    /**
+     * Fails when actual string only consists of tabs, linebreaks, whitespaces or no symbols at all.
+     */
     public static <E extends String> Validator<E> isWhitespace() {
         return new Validator<>(
                 (E value) -> value.trim().isEmpty(),

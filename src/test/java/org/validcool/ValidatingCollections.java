@@ -100,18 +100,18 @@ public class ValidatingCollections {
 
     @Test
     public void hasSameItemsInOrder_win() {
-        validate(asList(gandalf, bilbo, smaugs, smeagol), sameItemsInorder(asList(gandalf, bilbo, smaugs, smeagol)));
+        validate(asList(gandalf, bilbo, smaugs, smeagol), sameItemsInOrder(asList(gandalf, bilbo, smaugs, smeagol)));
         validate(asList(), sameItems(asList()));
     }
 
     @Test(expected = ValidationException.class)
     public void hasSameItemsInOrder_fail() {
-        validate(asList(gandalf, bilbo), sameItemsInorder(asList(bilbo, gandalf)));
+        validate(asList(gandalf, bilbo), sameItemsInOrder(asList(bilbo, gandalf)));
     }
 
     @Test(expected = ValidationException.class)
     public void hasSameItemsInOrder_differentLength_fail() {
-        validate(asList(gandalf, bilbo), sameItemsInorder(asList(bilbo, gandalf, smaugs)));
+        validate(asList(gandalf, bilbo), sameItemsInOrder(asList(bilbo, gandalf, smaugs)));
     }
 
     @Test

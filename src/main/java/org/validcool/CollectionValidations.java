@@ -5,6 +5,9 @@ import java.util.stream.Stream;
 
 public class CollectionValidations {
 
+    /**
+     * Fails when actual collection does not contain at least one item of items.
+     */
     public static <E extends Collection<?>> Validator<E> hasItems(E items) {
         return new Validator<>(
                 (E value) -> value.containsAll(items),
@@ -15,9 +18,13 @@ public class CollectionValidations {
         );
     }
 
+    /**
+     * Fails when actual collection contains no item of items.
+     * Always wins when items is empty.
+     */
     public static <E extends Collection<?>> Validator<E> hasAny(E items) {
         return new Validator<>(
-                (E value) -> value.stream().filter(items::contains).findAny().isPresent(),
+                (E value) -> items.size() == 0 || value.stream().filter(items::contains).findAny().isPresent(),
                 String.format("contains any of %s", Arrays.toString(items.toArray())),
                 (E value) -> String.format("%s contains none of %s",
                         Arrays.toString(items.toArray()),
@@ -25,6 +32,9 @@ public class CollectionValidations {
         );
     }
 
+    /**
+     * Fails when actual collection contains items not in the same order.
+     */
     public static <E extends List<?>> Validator<E> hasItemsInOrder(E items) {
         return new Validator<>(
                 (E value) -> {
@@ -78,6 +88,9 @@ public class CollectionValidations {
         return true;
     }
 
+    /**
+     * Fails when actual collection contains at least one of the items.
+     */
     public static <E extends Collection<?>> Validator<E> hasNot(E items) {
         return new Validator<>(
                 (E value) -> items.stream().allMatch((Object it) -> !value.contains(it)),
@@ -88,17 +101,23 @@ public class CollectionValidations {
         );
     }
 
-    public static <E extends Collection<?>> Validator<E> sameItems(E other) {
+    /**
+     * Fails when actual and expected collection do not consist of the same items, independent from order.
+     */
+    public static <E extends Collection<?>> Validator<E> sameItems(E expected) {
         return new Validator<>(
-                (E value) -> value.stream().allMatch((Object it) -> other.contains(it)) && value.size() == other.size(),
-                String.format("contains all the same items as %s", Arrays.toString(other.toArray())),
+                (E value) -> value.stream().allMatch(expected::contains) && value.size() == expected.size(),
+                String.format("contains all the same items as %s", Arrays.toString(expected.toArray())),
                 (E value) -> String.format("%s doesn't contain same items as %s",
                         Arrays.toString(value.toArray()),
-                        Arrays.toString(other.toArray()))
+                        Arrays.toString(expected.toArray()))
         );
     }
 
-    public static <E extends List<?>> Validator<E> sameItemsInorder(E other) {
+    /**
+     * Fails when actual and expected collection do not consist of the same items <b>in same order</b>.
+     */
+    public static <E extends List<?>> Validator<E> sameItemsInOrder(E other) {
         return new Validator<E>(
                 (E value) -> listEquals((List<Object>)value, (List<Object>)other),
                 String.format("contains same items in same order as %s", Arrays.toString(other.toArray())),
