@@ -62,7 +62,7 @@ public class CollectionValidations {
     }
 
     private static Stream<Integer> findAllIndicesOf(Object item, List<Object> list) {
-        Queue<Integer> indices = new LinkedList<Integer>();
+        Queue<Integer> indices = new LinkedList<>();
         for(int i = 0; i < list.size(); i++) {
             if(item.equals(list.get(i))) {
                 indices.offer(i);
@@ -119,7 +119,9 @@ public class CollectionValidations {
      */
     public static <E extends List<?>> Validator<E> sameItemsInOrder(E other) {
         return new Validator<E>(
-                (E value) -> listEquals((List<Object>)value, (List<Object>)other),
+                (E value) -> {
+                    return listEquals((List<Object>) value, (List<Object>) other);
+                },
                 String.format("contains same items in same order as %s", Arrays.toString(other.toArray())),
                 (E value) -> String.format("%s doesn't contains of %s in same order",
                         Arrays.toString(value.toArray()),
