@@ -1,6 +1,7 @@
 package org.validcool;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 /**
  * Unit of validation. One validator performs one act of validation on a supplied value.
@@ -11,7 +12,7 @@ import java.util.function.Function;
  */
 public class Validator<E> {
 
-    private Function<E, Boolean> validator;
+    private Predicate<E> validator;
     private String descr;
     private Function<E, String> onError;
 
@@ -23,7 +24,7 @@ public class Validator<E> {
      * @param descr describing the validation (e.g.: equal to "Hello World!")
      * @param onError generates error message including value (e.g.: "Anne" not equal to "Peter", "3" not lower than "2")
      */
-    public Validator(Function<E, Boolean> validator, String descr, Function<E, String> onError) {
+    public Validator(Predicate<E> validator, String descr, Function<E, String> onError) {
         this.validator = validator;
         this.descr = descr;
         this.onError = onError;
@@ -34,7 +35,7 @@ public class Validator<E> {
      * Invoke validation on actual value.
      */
     public void apply(E actual) {
-        valid = validator.apply(actual);
+        valid = validator.test(actual);
         if(!valid) {
             errorMessage = onError.apply(actual);
         }
