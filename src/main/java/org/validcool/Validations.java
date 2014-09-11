@@ -2,6 +2,7 @@ package org.validcool;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -26,6 +27,17 @@ public class Validations {
     }
 
     /**
+     * Executes the specified validator with the actual value <b>asynchronously</b>.
+     * @return a future to react on successful and exceptional validation
+     */
+    public static <E> CompletableFuture<E> validateAsynch(E actual, Validator<E> validator) {
+        return CompletableFuture.supplyAsync(() -> {
+            validate(actual, validator);
+            return actual;
+        });
+    }
+
+    /**
      * Executes the specified validator with the actual value. It will trigger the configured logging mechanism iff enabled,
      * and return true iff the validation was successful.
      */
@@ -36,6 +48,15 @@ public class Validations {
             validcoolConfig.logIfEnabled(validator.getErrorMessage());
         }
         return isValid;
+    }
+
+    /**
+     * Executes the specified validator with the actual value <b>asynchronously</b>.
+     * It will trigger the configured logging mechanism iff enabled,
+     * and return true iff the validation was successful.
+     */
+    public static <E> CompletableFuture<Boolean> checkAsynch(E actual, Validator<E> validator) {
+        return CompletableFuture.supplyAsync(() -> check(actual, validator));
     }
 
     /**
