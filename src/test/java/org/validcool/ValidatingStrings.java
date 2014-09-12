@@ -1,17 +1,11 @@
 package org.validcool;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.validcool.Validations.*;
 import static org.validcool.StringValidations.*;
 
-public class ValidatingStrings {
-
-    @BeforeClass
-    public static void setupValidators() {
-        validcoolConfig.startLogging();
-    }
+public class ValidatingStrings extends ValidationErrorLogging {
 
     @Test(expected = ValidationException.class)
     public void failOnMatching() {

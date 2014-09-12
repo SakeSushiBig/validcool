@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 public class Validations {
@@ -117,6 +118,22 @@ public class Validations {
                 (E value) -> value.equals(other),
                 String.format("equal to \"%s\"", other),
                 (E value) -> String.format("\"%s\" is not equal to \"%s\"", value, other)
+        );
+    }
+
+    /**
+     * Validates using a predicate function. Usage:
+     * <code>
+     *     validate(number, is("dividable by 2", val -> val % 2 == 0));
+     * </code>
+     * @param description tells what is validates (e.g. "contained in array [1,2,3]" or "smaller than 12"),
+     *                    the error message will be created in this schema: "$actual" is not $description.
+     */
+    public static <E> Validator<E> is(String description, Predicate<E> predicate) {
+        return new Validator<>(
+                predicate,
+                description,
+                (E value) -> String.format("\"%s\" is not %s", value, description)
         );
     }
 
