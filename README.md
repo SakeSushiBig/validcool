@@ -81,6 +81,83 @@ validate(person, is("an legal male adult", val -> val.getAge() >= 18 && val.getG
 
 To learn more, browse through the unit tests and use the extensive javadoc.
 
+### asynchronous validations
+When creating or updating big entity objects, with ten upwards properties, it is very likely to encounter a long running validation process. When think of properties like usernames or facebook IDs the validation even requires IO operations. Therefore validcool porivdes us with asynchronous execution of validators and a simple synchronization mechanism. The following example shows how to design and validate an entity class with validcools asynch package:
+
+```java
+
+import static org.validcool.asynch.ValidationHint.IoOperation;
+import static org.validcool.Validations.*;
+import static org.validcool.StringValidations.*;
+
+public class Company {
+ private String name;
+ private String uid;
+ private LocalDate foundingDate;
+ private Double avgRevenue;
+
+ @Autowired
+ private CompanyRepository repository;
+ @Autowired
+ private EuUidRegistryService uidService;
+
+ public Company(String name, String uid, LocalDate foundingDate, Double avgRevenue) {
+  // asynchronously executes and synchronizes the validations
+  // will throw a ValidationException when at least one property
+  // is not valid
+  validate(
+   setName(name), setUid(uid),
+   setFoundingDate(foundingDate),
+   setAvgRevenue(avgRevenue)
+  );
+ }
+
+ /* the setter methods should follow a certain pattern to optimally
+  * use validcools asynchronous validation, as you can see:
+  */
+ private AsynchValidation setName(String newName) {
+  return validateAsynch("name", newName, not(isNullOrEmptyString())
+   .and(is("not already taken", repository::isNameUnique)), IoOperation)
+   .whenValid(() -> name = newName);
+ }
+
+ private AsynchValidation setUid(String newUid) {
+  return validateAsynch("uid", newUid, nullValue()
+   .or(is("available in EU registry", uidService::checkAvailability)),
+   IoOperation).whenValid(() -> uid = newUid);
+ }
+
+ private AsynchValidation setFoundingDate(LocalDate newFoundingDate) {
+  return validateAsynch("founding date", newFoundingDate, not(nullValue).and(lowerThan(LocalDate.now())))
+   .whenValid(() -> foundingDate = newFoundingDate);
+ }
+
+ private AsynchValidation setAvgRevenue(Double newAvgRevenue) {
+  return validateAsynch("average revenue", newAvgRevenue, nullValue().or(greaterThan(0.0)))
+   .whenValid(() -> avgRevenue = newAvgRevenue);
+ }
+
+ // other getter and domain methods ...
+
+}
+```
+The so called validation hints, as used when validating name and uid in form of `IoOperation`, tell validcool wheter to execute the validation in a seperate task, or execute it together with other. The free validation hints currently available are:
+
+* `SimpleComputation` default, all validators marked with this are collected into one execution unit.
+* `HeavyComputation` executed in its own execution unit.
+* `IoOperation` executed in its own execution unit.
+
+Beside the pattern for entity validation, you can also use it in a much simple form:
+
+```java
+CompletableFuture future = validateAsynch(someObject, doSomeValidation()).run();
+try {
+ future.join();
+} catch(CompletionException e) {
+ throw (ValidationException)e;
+}
+```
+
 ### goals for the near future
 
 * adding more pre-defined validators

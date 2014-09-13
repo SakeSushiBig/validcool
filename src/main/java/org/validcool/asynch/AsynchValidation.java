@@ -5,6 +5,10 @@ import org.validcool.Validator;
 
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Allows asynchronous execution of validation by passing to @see org.validcool.Validations validate function or
+ * by calling the run() method. It is initialized by the validateAsynch functions in @see org.validcool.Validations.
+ */
 public class AsynchValidation<E> {
 
     private ValidationHint hint;
@@ -28,6 +32,9 @@ public class AsynchValidation<E> {
         return hint;
     }
 
+    /**
+     * Validate synchronously.
+     */
     public boolean validate() {
         boolean isValid = validator.test(actual);
         if(!isValid) {
@@ -42,6 +49,10 @@ public class AsynchValidation<E> {
         return isValid;
     }
 
+    /**
+     * Validate on JVMs common ForkJoinPool.
+     * @return a future on the validation process
+     */
     public CompletableFuture<Boolean> run() {
         return CompletableFuture.supplyAsync(this::validate);
     }

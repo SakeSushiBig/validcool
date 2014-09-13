@@ -36,25 +36,59 @@ public class Validations {
         }
     }
 
+    /**
+     * Prepares asynchronous validation on the actual value. It classifies the validation action as
+     * @see org.validcool.asynch.ValidationHint SimpleComputing by default.
+     * To actually execute the validation you can either call the run() method and handle the returned
+     * CompletableFuture instance, or you use the validate-function collecting multiple
+     * @see org.validcool.asynch.AsynchValidation instances.
+     * @param propertyName Will replace the actual value in the error message
+     */
     public static <E>AsynchValidation validateAsynch(String propertyName, E actual, Validator<E> validator) {
         return new AsynchValidation<>(propertyName, actual, validator, SimpleComputing);
     }
 
+    /**
+     * Prepares asynchronous validation on the actual value. It classifies the validation action as
+     * @see org.validcool.asynch.ValidationHint SimpleComputing by default.
+     * To actually execute the validation you can either call the run() method and handle the returned
+     * CompletableFuture instance, or you use the validate-function collecting multiple
+     * @see org.validcool.asynch.AsynchValidation instances.
+     * @param propertyName Will replace the actual value in the error message
+     * @param hint indicates wheter the validation shall be executed in its own execution unit
+     */
     public static <E>AsynchValidation validateAsynch(String propertyName, E actual,
                                                      Validator<E> validator, ValidationHint hint) {
         return new AsynchValidation<>(propertyName, actual, validator, hint);
     }
 
+    /**
+     * Prepares asynchronous validation on the actual value. It classifies the validation action as
+     * @see org.validcool.asynch.ValidationHint SimpleComputing by default.
+     * To actually execute the validation you can either call the run() method and handle the returned
+     * CompletableFuture instance, or you use the validate-function collecting multiple
+     * @see org.validcool.asynch.AsynchValidation instances.
+     */
     public static <E>AsynchValidation validateAsynch(E actual, Validator<E> validator) {
         return new AsynchValidation<>(null, actual, validator, SimpleComputing);
     }
 
+    /**
+     * Prepares asynchronous validation on the actual value. It classifies the validation action as
+     * @see org.validcool.asynch.ValidationHint SimpleComputing by default.
+     * To actually execute the validation you can either call the run() method and handle the returned
+     * CompletableFuture instance, or you use the validate-function collecting multiple
+     * @see org.validcool.asynch.AsynchValidation instances.
+     * @param hint indicates wheter the validation shall be executed in its own execution unit
+     */
     public static <E>AsynchValidation validateAsynch(E actual, Validator<E> validator, ValidationHint hint) {
         return new AsynchValidation<>(null, actual, validator, hint);
     }
 
     /**
-     * Executes and joins multiple asynchronous validations.
+     * Executes and joins multiple asynchronous validations on the JVMs common ForkJoinPool. It will collect all
+     * @see org.validcool.asynch.AsynchValidation instances hinted with SimpleComputing into one task, and all other
+     * into seperate tasks, to reach an optimal execution time.
      */
     public static void validate(AsynchValidation... validations) {
         List<AsynchValidation> list = Arrays.asList(validations);
