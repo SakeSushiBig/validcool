@@ -82,7 +82,7 @@ validate(person, is("an legal male adult", val -> val.getAge() >= 18 && val.getG
 To learn more, browse through the unit tests and use the extensive javadoc.
 
 ### asynchronous validations
-When creating or updating big entity objects, with ten upwards properties, it is very likely to encounter a long running validation process. When think of properties like usernames or facebook IDs the validation even requires IO operations. Therefore validcool porivdes us with asynchronous execution of validators and a simple synchronization mechanism. The following example shows how to design and validate an entity class with validcools asynch package:
+When creating or updating big entity objects, with ten upwards properties, it is very likely to encounter a long running validation process. When we think of properties like usernames or facebook IDs the validation even requires IO operations (check if unique or exists). Therefore validcool porivdes us with the asynchronous execution of validators and a simple synchronization mechanism. The following example shows how to design and validate an entity class with validcools asynch package:
 
 ```java
 
