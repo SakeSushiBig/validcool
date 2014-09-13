@@ -1,8 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.8
-version = '1.0'
+
+group: 'org.validcool'
+name: 'validcool'
+version = '0.1'
 
 repositories {
  mavenCentral()
@@ -10,4 +14,65 @@ repositories {
 
 dependencies {
  testCompile 'junit:junit:4.11'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task javadocJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archieves javadocJar
+    archieves sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repoistory(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: "username", password: "password")
+            }
+
+            pom.project {
+                name 'validcool'
+                packaging 'jar'
+                description 'A plain java library offering a hamcrest like approach to validation.'
+                url 'https://github.com/SakeSushiBig/validcool'
+
+                scm {
+                    url 'scm:git@github.com:SakeSushiBig/validcool.git'
+                    connection 'scm:git@github.com:SakeSushiBig/validcool.git'
+                    developerConnection 'scm:git@github.com:SakeSushiBig/validcool.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'http://opensource.org/licenses/MIT'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'amp'
+                        name 'Alexander Partsch'
+                        email 'office.partsch@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
