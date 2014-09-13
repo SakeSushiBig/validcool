@@ -4,7 +4,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -13,7 +15,7 @@ import static org.validcool.Validations.validate;
 import static org.validcool.Validations.validcoolConfig;
 import static org.validcool.FileValidations.*;
 
-public class ValidatingFiles {
+public class ValidatingFiles extends ValidationErrorLogging {
 
     @BeforeClass
     public static void setupValidating() {
@@ -27,6 +29,7 @@ public class ValidatingFiles {
     @BeforeClass
     public static void setupFiles() throws IOException {
         Files.createFile(tmpTextFile);
+        Files.write(tmpTextFile, "hello world".getBytes());
         Files.createDirectories(tmpSubdir);
     }
 
@@ -75,6 +78,28 @@ public class ValidatingFiles {
     @Test(expected = ValidationException.class)
     public void withinPath_fail() {
         validate(tmpTextFile, withinPath(tmpSubdir));
+    }
+
+    @Test
+    public void sameContent_win() {
+        validate(tmpTextFile, sameContent("hello world"));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void sameContent_fail() {
+        validate(tmpTextFile, sameContent("not hello world"));
+    }
+
+    @Test
+    public void sameContent_withStream_win() {
+        InputStream stream = new ByteArrayInputStream("hello world".getBytes());
+        validate(tmpTextFile, sameContent(stream));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void sameContent_withStream_fail() {
+        InputStream stream = new ByteArrayInputStream("hello world not".getBytes());
+        validate(tmpTextFile, sameContent(stream, 4));
     }
 
 }
