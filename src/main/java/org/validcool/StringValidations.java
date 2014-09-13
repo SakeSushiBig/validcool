@@ -10,8 +10,7 @@ public class StringValidations {
     public static <E extends CharSequence> Validator<E> matches(String pattern) {
         return new Validator<>(
                 (E value) -> Pattern.matches(pattern, value),
-                String.format("matches \"%s\"", pattern),
-                (E value) -> String.format("\"%s\" does not match pattern \"%s\"", value, pattern)
+                String.format("${actual} does not match \"%s\"", pattern)
         );
     }
 
@@ -21,8 +20,7 @@ public class StringValidations {
     public static <E extends String> Validator<E> isSubstringOf(String string) {
         return new Validator<>(
                 string::contains,
-                String.format("substring of \"%s\"", string),
-                (E value) -> String.format("\"%s\" is no substring of \"%s\"", value, string)
+                String.format("${actual} is no substring of \"%s\"", string)
         );
     }
 
@@ -32,48 +30,56 @@ public class StringValidations {
     public static <E extends String> Validator<E> contains(String other) {
         return new Validator<>(
                 (E value) -> value.contains(other),
-                String.format("contains \"%s\"", other),
-                (E value) -> String.format("\"%s\" does not contain \"%s\"", value, other)
+                String.format("${actual} does not contain \"%s\"", other)
         );
     }
 
-    public static <E extends CharSequence> Validator<E> hasLength(int length) {
+    public static <E extends String> Validator<E> hasLength(int length) {
         return new Validator<>(
-                (E value) -> value.length() == length,
-                String.format("string with length of %d", length),
-                (E value) -> String.format("Expected string with length of %d but received %d (\"%s\").", length, value.length(), value)
+                val -> val.length() == length,
+                String.format("${actual} does not have length of %d", length)
+        );
+    }
+
+    public static <E extends String> Validator<E> lengthLowerThan(int maxLength) {
+        return new Validator<>(
+                val -> val.length() < maxLength,
+                String.format("length of ${actual} is not lower than %d", maxLength)
+        );
+    }
+
+    public static <E extends String> Validator<E> lengthGreaterThan(int minLength) {
+        return new Validator<>(
+                val -> val.length() < minLength,
+                String.format("length of ${actual} is not greater than %d", minLength)
         );
     }
 
     public static <E extends String> Validator<E> equalIgnoreCase(String other) {
         return new Validator<>(
                 (E value) -> other.compareToIgnoreCase(value) == 0,
-                String.format("comparing, ignoring case, to \"%s\"", other),
-                (E value) -> String.format("Expected \"%s\" but got \"%s\".", other, value)
+                String.format("${actual} does not equal to, ignoring case,  \"%s\"", other)
         );
     }
 
     public static <E extends String> Validator<E> startsWith(String start) {
         return new Validator<>(
                 (E value) -> value.startsWith(start),
-                String.format("starts with \"%s\"", start),
-                (E value) -> String.format("\"%s\" doesn't start with \"%s\"", value, start)
+                String.format("${actual} does not start with \"%s\"", start)
         );
     }
 
     public static <E extends String> Validator<E> endsWith(String end) {
         return new Validator<>(
                 (E value) -> value.endsWith(end),
-                String.format("ends with \"%s\"", end),
-                (E value) -> String.format("\"%s\" doesn't start with \"%s\"", value, end)
+                String.format("${actual} does not end with \"%s\"", end)
         );
     }
 
     public static <E extends String> Validator<E> isNullOrEmptyString() {
         return new Validator<>(
-                (E value) -> value == null || value.isEmpty(),
-                String.format("null or empty string"),
-                (E value) -> String.format("expected null or empty string but got \"%s\"", value)
+                val -> val == null || val.isEmpty(),
+                "${actual} is not null or empty string"
         );
     }
 
@@ -83,8 +89,7 @@ public class StringValidations {
     public static <E extends String> Validator<E> isWhitespace() {
         return new Validator<>(
                 (E value) -> value.trim().isEmpty(),
-                "empty string",
-                (E value) -> String.format("expected only whitespaces but got \"%s\"", value)
+                "${actual} is not empty string"
         );
     }
 }
