@@ -160,7 +160,7 @@ try {
 
 ### goals for the near future
 
-* adding more pre-defined validators
 * publishing validcool on maven central
 * allowing to specify configuration on a class level (or something similar)
-* making it threadsafe (?, not sure if really necassary)
+* file i/o validators
+* reworking the async interface
