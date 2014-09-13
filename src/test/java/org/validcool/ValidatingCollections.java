@@ -1,24 +1,18 @@
 package org.validcool;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
 import static org.validcool.Validations.*;
 import static org.validcool.CollectionValidations.*;
 
-public class ValidatingCollections {
+public class ValidatingCollections extends ValidationErrorLogging {
 
     // some test strings
     private String gandalf = "the grey";
     private String bilbo = "baggings";
     private String smaugs = "desolation";
     private String smeagol = "golum";
-
-    @BeforeClass
-    public static void setupValidators() {
-        validcoolConfig.startLogging();
-    }
 
     @Test
     public void testItemsWin() {

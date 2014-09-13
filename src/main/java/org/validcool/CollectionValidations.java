@@ -11,10 +11,7 @@ public class CollectionValidations {
     public static <E extends Collection<?>> Validator<E> hasItems(E items) {
         return new Validator<>(
                 (E value) -> value.containsAll(items),
-                String.format("contains %s", Arrays.toString(items.toArray())),
-                (E value) -> String.format("%s does not contain %s",
-                        Arrays.toString(value.toArray()),
-                        Arrays.toString(items.toArray()))
+                String.format("${actual} does not contain %s", Arrays.toString(items.toArray()))
         );
     }
 
@@ -25,10 +22,7 @@ public class CollectionValidations {
     public static <E extends Collection<?>> Validator<E> hasAny(E items) {
         return new Validator<>(
                 (E value) -> items.size() == 0 || value.stream().filter(items::contains).findAny().isPresent(),
-                String.format("contains any of %s", Arrays.toString(items.toArray())),
-                (E value) -> String.format("%s contains none of %s",
-                        Arrays.toString(items.toArray()),
-                        Arrays.toString(value.toArray()))
+                String.format("${actual} does not contain any of %s", Arrays.toString(items.toArray()))
         );
     }
 
@@ -54,10 +48,7 @@ public class CollectionValidations {
                                             (List<Object>) items)
                     );
                 },
-                String.format("contains %s in same order", Arrays.toString(items.toArray())),
-                (E value) -> String.format("%s doesn't contain %s in same order",
-                        Arrays.toString(value.toArray()),
-                        Arrays.toString(items.toArray()))
+                String.format("${actual} does not contain %s in same order", Arrays.toString(items.toArray()))
         );
     }
 
@@ -94,10 +85,7 @@ public class CollectionValidations {
     public static <E extends Collection<?>> Validator<E> hasNot(E items) {
         return new Validator<>(
                 (E value) -> items.stream().allMatch((Object it) -> !value.contains(it)),
-                String.format("doesn't contain any of %s", Arrays.toString(items.toArray())),
-                (E value) -> String.format("%s contains at least one of %s",
-                        Arrays.toString(value.toArray()),
-                        Arrays.toString(items.toArray()))
+                String.format("${actual} does not contain any of %s", Arrays.toString(items.toArray()))
         );
     }
 
@@ -107,10 +95,7 @@ public class CollectionValidations {
     public static <E extends Collection<?>> Validator<E> sameItems(E expected) {
         return new Validator<>(
                 (E value) -> value.stream().allMatch(expected::contains) && value.size() == expected.size(),
-                String.format("contains all the same items as %s", Arrays.toString(expected.toArray())),
-                (E value) -> String.format("%s doesn't contain same items as %s",
-                        Arrays.toString(value.toArray()),
-                        Arrays.toString(expected.toArray()))
+                String.format("${actual} has not same content as %s", Arrays.toString(expected.toArray()))
         );
     }
 
@@ -122,18 +107,14 @@ public class CollectionValidations {
                 (E value) -> {
                     return listEquals((List<Object>) value, (List<Object>) other);
                 },
-                String.format("contains same items in same order as %s", Arrays.toString(other.toArray())),
-                (E value) -> String.format("%s doesn't contains of %s in same order",
-                        Arrays.toString(value.toArray()),
-                        Arrays.toString(other.toArray()))
+                String.format("${actual} has not same ordered content as %s", Arrays.toString(other.toArray()))
         );
     }
 
     public static <E extends Collection<?>> Validator<E> hasSize(int size) {
         return new Validator<E>(
                 (E value) -> value.size() == size,
-                String.format("collection of size %d", size),
-                (E value) -> String.format("expected size of %d but got %d", size, value.size())
+                String.format("${actual} has not a size of %d", size)
         );
     }
 
