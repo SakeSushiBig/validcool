@@ -3,6 +3,8 @@ package org.validcool.asynch;
 import org.validcool.Validations;
 import org.validcool.Validator;
 
+import java.util.concurrent.CompletableFuture;
+
 public class AsynchValidation<E> {
 
     private ValidationHint hint;
@@ -38,5 +40,9 @@ public class AsynchValidation<E> {
             Validations.validcoolConfig.handle(errorMessage);
         }
         return isValid;
+    }
+
+    public CompletableFuture<Boolean> run() {
+        return CompletableFuture.supplyAsync(this::validate);
     }
 }

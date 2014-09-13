@@ -53,7 +53,10 @@ public class Validations {
         return new AsynchValidation<>(null, actual, validator, hint);
     }
 
-    public static void setAndValidate(AsynchValidation...validations) {
+    /**
+     * Executes and joins multiple asynchronous validations.
+     */
+    public static void validate(AsynchValidation... validations) {
         List<AsynchValidation> list = Arrays.asList(validations);
         List<CompletableFuture<Boolean>> futures = new ArrayList<>();
         Queue<AsynchValidation> simpleValidation = new LinkedList<>();

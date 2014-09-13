@@ -12,7 +12,7 @@ public class EntityWithAsynchValidation {
     private String anotherString;
 
     public EntityWithAsynchValidation(String someString, int someInteger, LocalDate someDate, String anotherString) {
-        setAndValidate(
+        validate(
                 setSomeString(someString),
                 setSomeinteger(someInteger),
                 setSomeDate(someDate),
