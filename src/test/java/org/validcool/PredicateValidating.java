@@ -16,4 +16,9 @@ public class PredicateValidating extends ValidationErrorLogging {
         validate(13, is("dividable by 2", val -> val % 2 == 0));
     }
 
+    @Test(expected = ValidationException.class)
+    public void validateWithNegatedPredicate_win() {
+        validate(12, is("not dividable by 2", val -> val %2 == 1));
+    }
+
 }
