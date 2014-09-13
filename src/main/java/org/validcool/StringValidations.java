@@ -41,6 +41,20 @@ public class StringValidations {
         );
     }
 
+    public static <E extends String> Validator<E> lengthLowerThan(int maxLength) {
+        return new Validator<>(
+                val -> val.length() < maxLength,
+                String.format("length of ${actual} is not lower than %d", maxLength)
+        );
+    }
+
+    public static <E extends String> Validator<E> lengthGreaterThan(int minLength) {
+        return new Validator<>(
+                val -> val.length() < minLength,
+                String.format("length of ${actual} is not greater than %d", minLength)
+        );
+    }
+
     public static <E extends String> Validator<E> equalIgnoreCase(String other) {
         return new Validator<>(
                 (E value) -> other.compareToIgnoreCase(value) == 0,

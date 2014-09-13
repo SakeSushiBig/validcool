@@ -1,13 +1,17 @@
 package org.validcool;
 
+import org.validcool.asynch.AsynchValidation;
+import org.validcool.asynch.ValidationHint;
 import org.validcool.validators.WithValidator;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import static org.validcool.asynch.ValidationHint.SimpleComputing;
 
 public class Validations {
 
@@ -32,15 +36,47 @@ public class Validations {
         }
     }
 
-    /**
-     * Executes the specified validator with the actual value <b>asynchronously</b>.
-     * @return a future to react on successful and exceptional validation
-     */
-    public static <E> CompletableFuture<E> validateAsynch(E actual, Validator<E> validator) {
-        return CompletableFuture.supplyAsync(() -> {
-            validate(actual, validator);
-            return actual;
+    public static <E>AsynchValidation validateAsynch(String propertyName, E actual, Validator<E> validator) {
+        return new AsynchValidation<>(propertyName, actual, validator, SimpleComputing);
+    }
+
+    public static <E>AsynchValidation validateAsynch(String propertyName, E actual,
+                                                     Validator<E> validator, ValidationHint hint) {
+        return new AsynchValidation<>(propertyName, actual, validator, hint);
+    }
+
+    public static <E>AsynchValidation validateAsynch(E actual, Validator<E> validator) {
+        return new AsynchValidation<>(null, actual, validator, SimpleComputing);
+    }
+
+    public static <E>AsynchValidation validateAsynch(E actual, Validator<E> validator, ValidationHint hint) {
+        return new AsynchValidation<>(null, actual, validator, hint);
+    }
+
+    public static void setAndValidate(AsynchValidation...validations) {
+        List<AsynchValidation> list = Arrays.asList(validations);
+        List<CompletableFuture<Boolean>> futures = new ArrayList<>();
+        Queue<AsynchValidation> simpleValidation = new LinkedList<>();
+        list.forEach(v -> {
+            switch(v.getHint()) {
+                case IoOperation:
+                case HeavyComputing:
+                    futures.add(CompletableFuture.supplyAsync(v::validate));
+                    break;
+                case SimpleComputing:
+                    simpleValidation.offer(v);
+                    break;
+            }
         });
+        futures.add(CompletableFuture.supplyAsync(() -> simpleValidation.stream().allMatch(AsynchValidation::validate)));
+        try {
+            CompletableFuture[] futureArray = new CompletableFuture[futures.size()];
+            futureArray = futures.toArray(futureArray);
+            CompletableFuture.allOf(futureArray)
+                    .join();
+        } catch(CompletionException exception) {
+            throw (RuntimeException)exception.getCause();
+        }
     }
 
     /**

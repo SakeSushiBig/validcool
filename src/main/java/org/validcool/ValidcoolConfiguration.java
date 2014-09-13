@@ -73,7 +73,7 @@ public class ValidcoolConfiguration {
     /**
      * Handles validation error as specified in the configuration class.
      */
-    void handle(String errorMessage) {
+    public void handle(String errorMessage) {
         logIfEnabled(errorMessage);
         this.errorHandler.accept(errorMessage);
     }
