@@ -1,5 +1,6 @@
 package org.validcool;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringValidations {
@@ -31,6 +32,17 @@ public class StringValidations {
         return new Validator<>(
                 (E value) -> value.contains(other),
                 String.format("${actual} does not contain \"%s\"", other)
+        );
+    }
+
+    public static <E extends String> Validator<E> containsPattern(String pattern) {
+        return new Validator<>(
+                val -> {
+                    Pattern p = Pattern.compile(pattern);
+                    Matcher m = p.matcher(val);
+                    return m.find();
+                },
+                String.format("${actual} does not contain pattern \"%s\"", pattern)
         );
     }
 

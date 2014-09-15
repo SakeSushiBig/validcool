@@ -25,6 +25,16 @@ public class ValidatingStrings extends ValidationErrorLogging {
         validate(actual, matches(pattern));
     }
 
+    @Test
+    public void containsPattern_win() {
+        validate("hello 123", containsPattern("[0-9]{3,}"));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void containsPattern_fail() {
+        validate("hello 123", containsPattern("[0-9]{4,}"));
+    }
+
     @Test(expected = ValidationException.class)
     public void failOnSubstring() {
         // Arrange
