@@ -4,7 +4,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = 1.8
 
-group = 'org.validcool'
+group = 'com.github.sakesushibig'
 version = '0.1'
 
 repositories {
