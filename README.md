@@ -19,6 +19,27 @@ Here an overview on its features:
 * Fully customizable for error handling and logging.
 * Targeting properties when validating an instance like: `validate(person, with(Person::getAge, greaterThan(17)).and(Person::getName, not(isNullOrEmptyString())));`
 
+### using with maven or gradle
+Validcool is available on sonatypes maven central.
+
+```groovy
+repositories {
+ mavenCentral()
+}
+
+dependencies {
+ compile 'org.github.sakesushibig:validcool:0.1'
+}
+```
+
+```xml
+<dependency>
+  <groupId>com.github.sakesushibig</groupId>
+  <artifactId>validcool</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+
 ### quickstart
 The comfort of validcool comes mainly, like in hamcrest, from static imports. So first of all you need these three imports in each class using validcool.
 
