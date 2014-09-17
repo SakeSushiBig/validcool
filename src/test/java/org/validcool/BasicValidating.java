@@ -3,6 +3,7 @@ package org.validcool;
 import org.junit.Test;
 
 import java.awt.*;
+import java.time.LocalDate;
 
 import static java.util.Arrays.asList;
 import static org.validcool.Validations.*;
@@ -31,7 +32,7 @@ public class BasicValidating {
 
     @Test
     public void validateWithProperty_win() {
-        validate(new Point(1, 2), with(Point::getX, greaterThan(0.0)).and(with(Point::getY, greaterThan(1.0))));
+        validate(new Point(1, 2), all(with(Point::getX, greaterThan(0.0)), with(Point::getY, greaterThan(1.0))));
     }
 
     @Test
@@ -48,22 +49,22 @@ public class BasicValidating {
     public void andValidators_win() {
         String wolverine = "wolverine";
         String[] xMen = new String[] { "xavier", wolverine, "cyclops", "storm", "marvel girl"};
-        validate(wolverine, not(nullValue()).and(in(asList(xMen))));
+        validate(wolverine, all(not(nullValue()), in(asList(xMen))));
     }
 
     @Test(expected = ValidationException.class)
     public void andValidators_fail() {
-        validate("", not(nullValue()).and(equalTo("hello world")));
+        validate("", all(not(nullValue()), equalTo("hello world")));
     }
 
     @Test
     public void orValidators_win() {
-        validate("male", equalTo("female").or(equalTo("male")));
+        validate("male", any(equalTo("female"), equalTo("male")));
     }
 
     @Test(expected = ValidationException.class)
     public void orValidators_fail() {
-        validate("groot", equalTo("female").or(equalTo("male")));
+        validate("groot", any(equalTo("female"), equalTo("male")));
     }
 
 }

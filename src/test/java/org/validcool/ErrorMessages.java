@@ -31,12 +31,12 @@ public class ErrorMessages extends ValidationErrorLogging {
 
     @Test
     public void messageOnAssociation() {
-        testErrorMessage(() -> validate("symbol", "", not(isNullOrEmptyString()).and(hasLength(1))),
+        testErrorMessage(() -> validate("symbol", "", all(not(isNullOrEmptyString()), (hasLength(1)))),
                 "symbol is null or empty string");
-        testErrorMessage(() -> validate("symbol", "ab", not(isNullOrEmptyString()).and(hasLength(1))),
+        testErrorMessage(() -> validate("symbol", "ab", all(not(isNullOrEmptyString()), hasLength(1))),
                 "symbol does not have length of 1");
-        testErrorMessage(() -> validate(4, greaterThan(5).or(lowerThan(3))),
-                "4 is not greater than 5, 4 is not lower than 3");
+        testErrorMessage(() -> validate(4, any(greaterThan(5), lowerThan(3))),
+                "4 is not greater than 5;4 is not lower than 3;");
     }
 
     @Test

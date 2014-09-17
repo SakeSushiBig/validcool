@@ -2,6 +2,8 @@ package org.validcool;
 
 import org.validcool.asynch.AsynchValidation;
 import org.validcool.asynch.ValidationHint;
+import org.validcool.validators.AllValidator;
+import org.validcool.validators.AnyValidator;
 import org.validcool.validators.WithValidator;
 
 import java.util.*;
@@ -10,6 +12,7 @@ import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static org.validcool.asynch.ValidationHint.SimpleComputing;
 
@@ -34,6 +37,14 @@ public class Validations {
         if(!validator.test(actual)) {
             validcoolConfig.handle(validator.createErrorMessage(propertyName));
         }
+    }
+
+    public static <E> Validator<E> all(Validator<E> ... validators) {
+        return new AllValidator<>(Arrays.asList(validators));
+    }
+
+    public static <E> Validator<E> any(Validator<E> ... validators) {
+        return new AnyValidator<>(Arrays.asList(validators));
     }
 
     /**

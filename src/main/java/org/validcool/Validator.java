@@ -1,7 +1,5 @@
 package org.validcool;
 
-import org.validcool.validators.AndValidator;
-import org.validcool.validators.OrValidator;
 
 import java.util.function.Predicate;
 
@@ -39,24 +37,6 @@ public class Validator<E> {
 
     public String getErrorMessagePattern() {
         return errorMessagePattern;
-    }
-
-    /**
-     * Links the validator with the other via the logical and operation. At point of validation both, the validator and
-     * the other, need to be valid so the overall validation result will be valid.
-     * @return a new Validator requiring current and other to be valid
-     */
-    public Validator<E> and(Validator<E> other) {
-        return new AndValidator<>(this, other);
-    }
-
-    /**
-     * Links the validator with the other via the logical and operation. At point of validation at least one, the validator or
-     * the other, need to be valid so the overall validation result will be valid.
-     * @return a new Validator requiring at least one of current or other to be valid
-     */
-    public Validator<E> or(Validator<E> other) {
-        return new OrValidator<>(this, other);
     }
 
 }
