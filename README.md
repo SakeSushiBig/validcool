@@ -3,10 +3,10 @@
 A plain java library offering a [hamcrest like](https://code.google.com/p/hamcrest/) approach to validation. Here some examples:
 
 ```java
-validate(name, not(isNullOrEmptyString()).and(matches("[A-Z][a-z]+"));
+validate(name, all(not(isNullOrEmptyString()), matches("[A-Z][a-z]+")));
 validate(person, with(Person::getAge, greaterThan(17)));
 validate(asList("wolverine", "iceman", "beast"), containsInorder(asList("storm", "xavier", "wolverine", "iceman", "beast", "rouge")));
-validate("hello world", endsWith("moon").or(startsWith("hello")));
+validate("hello world", any(endsWith("moon"), startsWith("hello")));
 validate(12, is("dividable by 2", val -> val % 2 == 0));
 ```
 
@@ -14,10 +14,10 @@ Here an overview on its features:
 
 * Very readable and nice looking function flow.
 * Auto generated, human readable error messages.
-* Logical operatos like `and` and `or` to link validations.
+* Logical operation validators and/any.
 * Rich collection of pre-defined validation operations (even specific ones for strings and collections).
 * Fully customizable for error handling and logging.
-* Targeting properties when validating an instance like: `validate(person, with(Person::getAge, greaterThan(17)).and(Person::getName, not(isNullOrEmptyString())));`
+* Targeting properties when validating an instance like: `validate(person, with(Person::getAge, all(greaterThan(17)), Person::getName, not(isNullOrEmptyString())));`
 
 ### using with maven or gradle
 Validcool is available on sonatypes maven central.
@@ -89,7 +89,7 @@ public static <E extends Person> Validator<E> isOfAge() {
 The second parameter (`description`) will be used when the validator is compund with others, for instance through logical operations like in the following example:
 
 ```java
-validate("Peter", not(nullValue()).and(equalTo("Anne")));
+validate("Peter", all(not(nullValue()), equalTo("Anne")));
 // -> throws exception with error message: "Peter" is not null but "Peter" not equal to "Anne"
 ```
 
@@ -137,24 +137,26 @@ public class Company {
   * use validcools asynchronous validation, as you can see:
   */
  private AsynchValidation setName(String newName) {
-  return validateAsynch("name", newName, not(isNullOrEmptyString())
-   .and(is("not already taken", repository::isNameUnique)), IoOperation)
+  return validateAsynch("name", newName, all(
+     not(isNullOrEmptyString()),
+     is("not already taken", repository::isNameUnique)), IoOperation)
    .whenValid(() -> name = newName);
  }
 
  private AsynchValidation setUid(String newUid) {
-  return validateAsynch("uid", newUid, nullValue()
-   .or(is("available in EU registry", uidService::checkAvailability)),
+  return validateAsynch("uid", newUid, any(
+     nullValue(),
+     is("available in EU registry", uidService::checkAvailability)),
    IoOperation).whenValid(() -> uid = newUid);
  }
 
  private AsynchValidation setFoundingDate(LocalDate newFoundingDate) {
-  return validateAsynch("founding date", newFoundingDate, not(nullValue).and(lowerThan(LocalDate.now())))
+  return validateAsynch("founding date", newFoundingDate, all(not(nullValue), lowerThan(LocalDate.now())))
    .whenValid(() -> foundingDate = newFoundingDate);
  }
 
  private AsynchValidation setAvgRevenue(Double newAvgRevenue) {
-  return validateAsynch("average revenue", newAvgRevenue, nullValue().or(greaterThan(0.0)))
+  return validateAsynch("average revenue", newAvgRevenue, any(nullValue(), greaterThan(0.0)))
    .whenValid(() -> avgRevenue = newAvgRevenue);
  }
 
