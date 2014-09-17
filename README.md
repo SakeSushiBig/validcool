@@ -183,7 +183,8 @@ try {
 
 ### goals for the near future
 
-* publishing validcool on maven central
 * allowing to specify configuration on a class level (or something similar)
 * file i/o validators
 * reworking the async interface
+
+**Caution: Until version 0.5 I will not guarantee backwards-compatibility.**
