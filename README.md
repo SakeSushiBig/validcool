@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
- compile 'org.github.sakesushibig:validcool:0.1'
+ compile 'org.github.sakesushibig:validcool:0.2'
 }
 ```
 
@@ -36,7 +36,7 @@ dependencies {
 <dependency>
   <groupId>com.github.sakesushibig</groupId>
   <artifactId>validcool</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 </dependency>
 ```
 
