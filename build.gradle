@@ -1,10 +1,12 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 
 group = 'com.github.sakesushibig'
+archivesBaseName = 'validcool'
 version = '0.1'
 
 repositories {
@@ -16,3 +18,64 @@ dependencies {
  testCompile 'junit:junit:4.11'
 }
 
+task javadocJar(type: Jar) {
+ classifier = 'javadoc'
+ from javadoc
+}
+
+task sourcesJar(type: Jar) {
+ classifier = 'sources'
+ from sourceSets.main.allSource
+}
+
+artifacts {
+ archives javadocJar, sourcesJar
+}
+
+signing {
+ sign configurations.archives
+}
+
+uploadArchives {
+ repositories {
+  mavenDeployer {
+   beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+   repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+    authentication(userName: ossrhUsername, password: ossrhPassword)
+   }
+
+   snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+    authentication(userName: ossrhUsername, password: ossrhPassword)
+   }
+
+   pom.project {
+    name 'validcool'
+    packaging 'jar'
+    description 'A plain java library offering a hamcrest like approach to validation.'
+    url 'https://github.com/SakeSushiBig/validcool'
+    
+    scm {
+     connection 'git@github.com:SakeSushiBig/validcool.git'
+     developerConnection 'git@github.com:SakeSushiBig/validcool.git'
+     url 'https://github.com/SakeSushiBig/validcool'
+    }
+
+    licenses {
+     license {
+      name 'The MIT License (MIT)'
+      url 'http://opensource.org/licenses/MIT'
+     }
+    }
+
+    developers {
+     developer {
+      id 'amp'
+      name 'Alexander Magnu Partsch'
+      email 'office.partsch@gmail.com'
+     }
+    }
+   }
+  }
+ }
+}

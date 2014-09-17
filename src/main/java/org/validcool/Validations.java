@@ -210,7 +210,7 @@ public class Validations {
     /**
      * Validates using a predicate function. Usage:
      * <code>
-     *     validate(number, is("dividable by 2", val -> val % 2 == 0));
+     *     validate(number, is("dividable by 2", val -&gt; val % 2 == 0));
      * </code>
      * @param description tells what is validates (e.g. "contained in array [1,2,3]" or "smaller than 12"),
      *                    the error message will be created in this schema: "$actual" is not $description.

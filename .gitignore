@@ -6,6 +6,8 @@
 # gradle directories
 .gradle/*
 build/*
+# gradle properties, containing private deployment info
+gradle.properties
 
 # vim swap files
 *.swp
