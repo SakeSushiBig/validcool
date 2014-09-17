@@ -39,10 +39,16 @@ public class Validations {
         }
     }
 
+    /**
+     * All specified validators have to succeed on the actual value.
+     */
     public static <E> Validator<E> all(Validator<E> ... validators) {
         return new AllValidator<>(Arrays.asList(validators));
     }
 
+    /**
+     * At least one of the validators has to succeed on the actual value.
+     */
     public static <E> Validator<E> any(Validator<E> ... validators) {
         return new AnyValidator<>(Arrays.asList(validators));
     }
