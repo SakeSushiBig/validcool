@@ -3,7 +3,7 @@ package org.validcool;
 import java.util.function.Consumer;
 
 /**
- * Central point of validation for validcool.
+ * Central point of configuration for validcool.
  * @author amp
  * @since 1.0
  */
